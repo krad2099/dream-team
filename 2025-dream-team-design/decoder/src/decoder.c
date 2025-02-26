@@ -8,7 +8,6 @@
 #include "mxc_delay.h"
 #include "simple_flash.h"
 #include "host_messaging.h"
-
 #include "simple_uart.h"
 #include "simple_crypto.h"  // Ensure we have HMAC functionality
 
@@ -98,11 +97,7 @@ void load_secret_key() {
     flash_simple_read(FLASH_SECRET_ADDR, secret_key, 32);
 }
 
-/** @brief Checks whether the decoder is subscribed to a given channel
- *
- *  @param channel The channel number to be checked.
- *  @return 1 if the the decoder is subscribed to the channel.  0 if not.
-*/
+/** @brief Checks whether the decoder is subscribed to a given channel */
 int is_subscribed(channel_id_t channel) {
     if (channel == EMERGENCY_CHANNEL) {
         return 1;
@@ -115,16 +110,14 @@ int is_subscribed(channel_id_t channel) {
     return 0;
 }
 
-/** @brief Verifies the HMAC signature of an incoming frame
- *
- *  @param frame The frame data structure.
- *  @return 1 if HMAC is valid, 0 otherwise.
-*/
+/** @brief Verifies the HMAC signature of an incoming frame */
 int verify_hmac(frame_packet_t *frame) {
     uint8_t computed_hmac[HMAC_SIZE];
     hmac_sha256(secret_key, 32, (uint8_t *)frame, sizeof(frame_packet_t) - HMAC_SIZE, computed_hmac);
 
-    if (memcmp(frame->hmac, computed_hmac, HMAC_SIZE) != 0) {
+    if (memcmp(frame->hmac, computed_hmac, HMAC_SIZE) == 0) {
+        return 1;
+    } else {
         print_error("HMAC verification failed\n");
         return 0;
     }
@@ -134,10 +127,7 @@ int verify_hmac(frame_packet_t *frame) {
  ********************* CORE FUNCTIONS *********************
  **********************************************************/
 
-/** @brief Updates the channel subscription.
- *
- *  @return 0 upon success, -1 if error.
-*/
+/** @brief Updates the channel subscription */
 int update_subscription(pkt_len_t pkt_len, subscription_update_packet_t *update) {
     int i;
 
@@ -178,10 +168,7 @@ int update_subscription(pkt_len_t pkt_len, subscription_update_packet_t *update)
     return 0;
 }
 
-/** @brief Processes a frame packet.
- *
- *  @return 0 if successful, -1 if the data is from an unsubscribed channel.
-*/
+/** @brief Processes a frame packet */
 int decode(pkt_len_t pkt_len, frame_packet_t *new_frame) {
     char output_buf[128] = {0};
     uint16_t frame_size = pkt_len - (sizeof(new_frame->channel) + sizeof(new_frame->timestamp) + HMAC_SIZE);
