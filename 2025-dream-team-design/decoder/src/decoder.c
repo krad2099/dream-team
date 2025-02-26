@@ -124,9 +124,7 @@ int verify_hmac(frame_packet_t *frame) {
     uint8_t computed_hmac[HMAC_SIZE];
     hmac_sha256(secret_key, 32, (uint8_t *)frame, sizeof(frame_packet_t) - HMAC_SIZE, computed_hmac);
 
-    if (memcmp(frame->hmac, computed_hmac, HMAC_SIZE) == 0) {
-        return 1;
-    } else {
+    if (memcmp(frame->hmac, computed_hmac, HMAC_SIZE) != 0) {
         print_error("HMAC verification failed\n");
         return 0;
     }
