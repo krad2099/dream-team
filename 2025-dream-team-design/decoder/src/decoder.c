@@ -44,6 +44,7 @@ typedef struct {
     uint8_t data[FRAME_SIZE];
     uint8_t hmac[HMAC_SIZE];
 } frame_packet_t;
+#pragma pack(pop)
 
 typedef struct {
     decoder_id_t decoder_id;
@@ -64,7 +65,7 @@ typedef struct {
     channel_info_t channel_info[MAX_CHANNEL_COUNT];
 } list_response_t;
 
-#pragma pack(pop)
+
 
 /**********************************************************
  ******************** TYPE DEFINITIONS ********************
