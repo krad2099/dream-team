@@ -57,9 +57,26 @@ class Encoder:
         # TODO: encode the satellite frames so that they meet functional and
         #  security requirements
 
-        header = struct.pack("<IQ", channel, timestamp)
-        payload = header + frame
+        
+        # Ensure frame is exactly 64 bytes
+        if len(frame) > 64:
+            raise ValueError(f"Frame size exceeds 64 bytes (got {len(frame)} bytes)")
+
+        # Pad frame with zeros if it is less than 64 bytes
+        frame = frame.ljust(64, b'\x00')
+
+        # Create the payload with channel + timestamp + frame data
+        payload = struct.pack("<IQ", channel, timestamp) + frame
+
+        # Generate HMAC signature
         signature = hmac.new(self.hmac_key, payload, hashlib.sha256).digest()
+
+        # Debugging output
+        print(f"Frame Length Before Encoding: {len(frame)}")
+        print(f"Payload Length (without HMAC): {len(payload)}")
+        print(f"Signature Length: {len(signature)}")
+        print(f"Total Encoded Frame Length: {len(payload + signature)}")
+        
         return payload + signature
 
 
