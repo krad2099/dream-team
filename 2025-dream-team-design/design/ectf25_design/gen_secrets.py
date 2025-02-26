@@ -1,3 +1,10 @@
+"""
+Author: Dream Team
+Program: gen_secrets.py
+Date: 2025
+"""
+
+
 import argparse
 import json
 from pathlib import Path
