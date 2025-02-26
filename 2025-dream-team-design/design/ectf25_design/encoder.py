@@ -1,3 +1,11 @@
+
+
+"""
+Author: Dream Team
+Program: encoder.py
+Date: 2025
+"""
+
 import argparse
 import struct
 import json
