@@ -23,7 +23,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     wget \
     libtool \
     texinfo \
-    unzip    
+    unzip \
+    libwolfssl-dev
 
 # Install MSDK
 RUN apt-get install -y unzip && \
