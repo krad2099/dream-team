@@ -30,7 +30,7 @@ def gen_secrets(channels: list[int]) -> bytes:
     #   your design
 
     # Generate a random 32-byte secret and encode it as a hex string.
-    secret_key = binascii.hexlify(os.urandom(32)).decode()
+    secret_key = binascii.hexlify(os.urandom(16)).decode()
 
     # Create the secrets object.
     # You can change this to generate any secret material
